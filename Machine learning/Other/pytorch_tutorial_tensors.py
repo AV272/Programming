@@ -100,7 +100,7 @@ print(f"tensor @ tensor.T \n {tensor @ tensor.T}")
 print(tensor, "\n")
 tensor.add_(5)
 print(tensor)
-tensor.multiply_(4)
+tensor.mul_(4)
 print(tensor)
 
 
