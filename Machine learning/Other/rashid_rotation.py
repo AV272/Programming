@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Tue Feb  2 12:57:45 2021
+Created on Thu Feb  4 16:59:02 2021
 
 @author: lkst
 """
+
 import numpy as np
 import scipy.special as sp
 import matplotlib.pyplot as plt
+import scipy.ndimage as spnd
 
 
 # definition of neural network class 
@@ -113,6 +115,16 @@ for num in range(1):
             targets = np.zeros(output_nodes) + 0.01
             targets[int(all_values[0])] = 0.99
             n.train(inputs, targets)
+            
+            # create rotation variations
+            # rotate anticlockwise by 10 degrees
+            inputs_plusx_img = spnd.interpolation.rotate(inputs.reshape(28,28),\
+                                                                  10, cval=0.01, order=1, reshape=False)
+            n.train(inputs_plusx_img.reshape(784), targets)
+            # rotated clockwise by x degrees
+            inputs_minusx_img = spnd.interpolation.rotate(inputs.reshape(28,28), \
+                                                                   -10, cval=0.01, order=1, reshape=False)
+            n.train(inputs_minusx_img.reshape(784), targets)
             pass
         pass
     
@@ -156,14 +168,14 @@ for num in range(1):
     pass
 
 # создаём рисунок с координатную плоскость
-fig = plt.subplots()
+#fig = plt.subplots()
 # создаём область, в которой будет отображаться график
 # значения x, которые будут отображены
 # количество элементов в созданном массиве - качество прорисовки графика 
 # рисуем график
-plt.plot(lr_arr, eff_arr,'ro')
+#plt.plot(lr_arr, eff_arr,'ro')
 # показываем график
-plt.show() 
+#plt.show() 
 
 
 

@@ -45,21 +45,15 @@ sizzles = dog('Sizz', 37)
 sizzles.status()
 
 
-<<<<<<< HEAD
 data_file = open('/home/lkst/github/Programming/Machine learning/Other/Data/mnist_test_10.csv')
-=======
-data_file = open('/home/lkst/github/Programming/Machine learning/Other/Data/mnist_train_100.csv')
->>>>>>> c63ce6e0192da1c9180c546d56df84688314fb07
+
 data_list = data_file.readlines()
 data_file.close()
 
 len(data_list)
 
-<<<<<<< HEAD
 all_values = data_list[9].split(',')
-=======
-all_values = data_list[50].split(',')
->>>>>>> c63ce6e0192da1c9180c546d56df84688314fb07
+
 image_array = np.asfarray(all_values[1:]).reshape((28,28))
 mpl.imshow(image_array, cmap='Greys', interpolation=(None))
 
