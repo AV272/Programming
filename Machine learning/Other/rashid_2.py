@@ -7,7 +7,10 @@ Created on Tue Feb  2 12:57:45 2021
 """
 import numpy as np
 import scipy.special as sp
+<<<<<<< HEAD
 import matplotlib.pyplot as plt
+=======
+>>>>>>> c63ce6e0192da1c9180c546d56df84688314fb07
 
 # definition of neural network class 
 class neuralNetwork:
@@ -79,6 +82,7 @@ class neuralNetwork:
         final_outputs = self.activation_function(final_inputs)
         
         return(final_outputs)
+<<<<<<< HEAD
 
 # number of input, hidden, output nodes
 input_nodes = 784
@@ -163,6 +167,17 @@ fig = plt.subplots()
 plt.plot(lr_arr, eff_arr,'ro')
 # показываем график
 plt.show() 
+=======
+    
+input_nodes = 3
+hidden_nodes = 3
+output_nodes = 3
+learning_rate = 0.3
+
+n = neuralNetwork(input_nodes, hidden_nodes, output_nodes, learning_rate)
+print(n.query([1.0, 0.5, -1.5]))
+
+>>>>>>> c63ce6e0192da1c9180c546d56df84688314fb07
 
 
 
