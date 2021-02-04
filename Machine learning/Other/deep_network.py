@@ -14,7 +14,7 @@ import torch.nn.functional as F
 
 xy = np.loadtxt(d, delimiter=',', dtype=np.float32)
 
-x_data = Variable(torch.from_numpy(xy[:,0,-1])) # exclude last colomn
+x_data = Variable(torch.from_numpy(xy[:,0:-1])) # exclude last colomn
 y_data = Variable(torch.from_numpy(xy[:,[-1]]))
 
 
@@ -32,5 +32,28 @@ class Model(torch.nn.Module):
         out2 = F.relu(self.l2(out1))
         y_pred = self.sigmoid(self.l3(out2))
         return(y_pred)
+    
+model = Model()
+
+criterion = torch.nn.BCELoss(size_average=True) # binary cross entropy
+optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
+
+for epoch in range(1000):
+    y_pred = model(x_data)
+    loss = criterion(y_pred, y_data)
+    
+    print(epoch, loss.item())
+    
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+    
+    
+    
+    
+    
+    
+    
+    
     
     
