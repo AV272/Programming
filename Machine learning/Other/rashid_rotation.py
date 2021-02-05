@@ -85,14 +85,16 @@ class neuralNetwork:
 
 # number of input, hidden, output nodes
 input_nodes = 784
-hidden_nodes = 150
+hidden_nodes = 200
 output_nodes = 10
-learning_rate = 0.2
+learning_rate = 0.01
 
-lr_arr = []
+x_arr = []
 eff_arr = []
 
 for num in range(1):
+    
+    angle = 10
     
     #hidden_nodes = num*50 + 50
     n = neuralNetwork(input_nodes, hidden_nodes, output_nodes, learning_rate)
@@ -104,7 +106,7 @@ for num in range(1):
     
     ## TRAINING OF NEURAL NETWORK
     # using few epochs
-    epochs = 6
+    epochs = 10
     for e in range(epochs):
         
         for record in training_data_list:
@@ -119,11 +121,11 @@ for num in range(1):
             # create rotation variations
             # rotate anticlockwise by 10 degrees
             inputs_plusx_img = spnd.interpolation.rotate(inputs.reshape(28,28),\
-                                                                  10, cval=0.01, order=1, reshape=False)
+                                                                  angle, cval=0.01, order=1, reshape=False)
             n.train(inputs_plusx_img.reshape(784), targets)
             # rotated clockwise by x degrees
             inputs_minusx_img = spnd.interpolation.rotate(inputs.reshape(28,28), \
-                                                                   -10, cval=0.01, order=1, reshape=False)
+                                                                   -angle, cval=0.01, order=1, reshape=False)
             n.train(inputs_minusx_img.reshape(784), targets)
             pass
         pass
@@ -163,7 +165,7 @@ for num in range(1):
     scorecard_array = np.asarray(scorecard)
     print('Effectiveness = ', scorecard_array.sum()/scorecard_array.size)
     eff = scorecard_array.sum()/scorecard_array.size
-    lr_arr.append(epochs)
+    x_arr.append(angle)
     eff_arr.append(eff)
     pass
 
@@ -173,7 +175,7 @@ for num in range(1):
 # значения x, которые будут отображены
 # количество элементов в созданном массиве - качество прорисовки графика 
 # рисуем график
-#plt.plot(lr_arr, eff_arr,'ro')
+#plt.plot(x_arr, eff_arr,'ro')
 # показываем график
 #plt.show() 
 

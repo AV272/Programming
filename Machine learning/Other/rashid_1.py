@@ -8,6 +8,7 @@ Created on Tue Feb  2 12:19:33 2021
 
 import numpy as np
 import matplotlib.pyplot as mpl
+import scipy.ndimage as spnd
 
 a = np.zeros([3,2])
 a[0,0] = 1
@@ -55,7 +56,8 @@ len(data_list)
 all_values = data_list[9].split(',')
 
 image_array = np.asfarray(all_values[1:]).reshape((28,28))
-mpl.imshow(image_array, cmap='Greys', interpolation=(None))
+img_arr_rotate = spnd.interpolation.rotate(image_array, 45, cval=0.01, reshape=False)
+mpl.imshow(img_arr_rotate, cmap='Greys', interpolation=(None))
 
 
 
