@@ -109,5 +109,11 @@ select max(population)-min(population) from city;
 SELECT CEIL(AVG(Salary)-AVG(REPLACE(Salary,'0',''))) FROM EMPLOYEES;
 
 
+# нахождение медианы
+select round(s.lat_n, 4) 
+from station as s 
+where ( (select count(lat_n) from station where s.lat_n >= lat_n) - 
+        (select count(lat_n)%2 from station) = 
+        (select count(lat_n) from station where s.lat_n < lat_n) )
 
 
