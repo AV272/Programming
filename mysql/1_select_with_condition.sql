@@ -116,4 +116,56 @@ where ( (select count(lat_n) from station where s.lat_n >= lat_n) -
         (select count(lat_n)%2 from station) = 
         (select count(lat_n) from station where s.lat_n < lat_n) )
 
+select city.name from city,country where city.countrycode = country.code and country.continent = "Africa";
+
+
+# Группировка по континетнтам. Собираем все города для каждого из континентов.
+select country.continent, floor(avg(city.population))
+from city, country
+where city.countrycode = country.code
+group by country.continent;
+
+
+# Сложное условие для двух таблиц
+select
+    case 
+        when grades.grade >= 8 then students.name
+        else NULL
+    end, grades.grade, students.marks
+from students, grades
+where students.marks >= grades.min_mark and students.marks <= grades.max_mark
+order by grades.grade desc, students.name;
+
+
+# Объединение таблиц по некоторому столбцу. Группировка с условием.
+select h.hacker_id, h.name
+from submissions s
+    inner join challenges c on s.challenge_id = c.challenge_id
+    inner join difficulty d on c.difficulty_level = d.difficulty_level 
+    inner join hackers h on s.hacker_id = h.hacker_id
+where s.score = d.score and c.difficulty_level = d.difficulty_level
+group by h.hacker_id, h.name having count(s.hacker_id) > 1
+order by count(s.hacker_id) desc, s.hacker_id asc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
