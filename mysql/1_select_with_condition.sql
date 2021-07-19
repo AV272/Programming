@@ -149,15 +149,36 @@ order by count(s.hacker_id) desc, s.hacker_id asc
 
 
 
+SELECT CASE             
+            WHEN P is NULL THEN CONCAT(N, ' Root')
+            WHEN N in (select P from BST) THEN CONCAT(N, ' Inner')
+            ELSE CONCAT(N, ' Leaf')
+       END
+FROM BST
+ORDER BY N;
+
+
+select c.company_code, c.founder, count(distinct em.lead_manager_code),
+       count(distinct em.senior_manager_code), count(distinct em.manager_code), count(distinct employee_code)
+from company as c
+    inner join lead_manager as l on c.company_code = l.company_code
+    inner join senior_manager as s on c.company_code = s.company_code
+    inner join manager as m on c.company_code = m.company_code
+    inner join employee as em on c.company_code = em.company_code    
+group by c.company_code, c.founder
+order by em.company_code;
 
 
 
 
-
-
-
-
-
+select w.id, wp.age, w.coins_needed, w.power
+from wands as w
+    inner join wands_property as wp on w.code = wp.code
+where wp.is_evil = 0 and w.coins_needed = 
+    (select min(coins_needed) from wands as w2
+     inner join wands_property as wp2 on w2.code = wp2.code
+     where w2.power = w.power and wp2.age = wp.age)
+order by w.power desc, wp.age desc;
 
 
 
