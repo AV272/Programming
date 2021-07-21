@@ -202,13 +202,13 @@ group by RowNumber;
 
 
 
-# нАХОЖДЕНИЕ ПРОСТЫХ ЧИСЕЛ
+# НАХОЖДЕНИЕ ПРОСТЫХ ЧИСЕЛ
 SET @potential_prime = 1;
 SET @divisor = 1;
 
 SELECT GROUP_CONCAT(POTENTIAL_PRIME SEPARATOR '&') FROM
     (SELECT @potential_prime := @potential_prime + 1 AS POTENTIAL_PRIME FROM
-    information_schema.tables t1,
+    information_schema.tables t1,                                                      # задание таблицы чисел от 1 до 1000
     information_schema.tables t2
     LIMIT 1000) list_of_potential_primes
 WHERE NOT EXISTS(
