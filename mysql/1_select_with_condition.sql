@@ -220,6 +220,20 @@ WHERE NOT EXISTS(
     WHERE POTENTIAL_PRIME%DIVISOR = 0 AND DIVISOR< POTENTIAL_PRIME);
 
 
-
-
+select h.hacker_id, h.name, count(c.hacker_id) as counter
+from hackers h
+     inner join challenges c on c.hacker_id = h.hacker_id
+group by h.hacker_id, h.name
+having counter in (select tb2.co3 
+                   from (select count(hacker_id) as co3
+                         from challenges
+                         group by hacker_id) as tb2
+                   group by tb2.co3 having count(tb2.co3) = 1 )
+or counter = (select max(tb3.co4) 
+                   from (select count(hacker_id) as co4
+                         from challenges
+                         group by hacker_id) as tb3 
+             )                 
+                   
+order by count(c.hacker_id) desc, h.hacker_id asc
 
