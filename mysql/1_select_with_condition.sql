@@ -126,6 +126,10 @@ where city.countrycode = country.code
 group by country.continent;
 
 
+
+
+
+
 # Сложное условие для двух таблиц
 select
     case 
@@ -135,6 +139,9 @@ select
 from students, grades
 where students.marks >= grades.min_mark and students.marks <= grades.max_mark
 order by grades.grade desc, students.name;
+
+
+
 
 
 # Объединение таблиц по некоторому столбцу. Группировка с условием.
@@ -149,6 +156,10 @@ order by count(s.hacker_id) desc, s.hacker_id asc
 
 
 
+
+
+
+
 SELECT CASE             
             WHEN P is NULL THEN CONCAT(N, ' Root')
             WHEN N in (select P from BST) THEN CONCAT(N, ' Inner')
@@ -156,6 +167,10 @@ SELECT CASE
        END
 FROM BST
 ORDER BY N;
+
+
+
+
 
 
 select c.company_code, c.founder, count(distinct em.lead_manager_code),
@@ -171,6 +186,7 @@ order by em.company_code;
 
 
 
+
 select w.id, wp.age, w.coins_needed, w.power
 from wands as w
     inner join wands_property as wp on w.code = wp.code
@@ -179,6 +195,9 @@ where wp.is_evil = 0 and w.coins_needed =
      inner join wands_property as wp2 on w2.code = wp2.code
      where w2.power = w.power and wp2.age = wp.age)
 order by w.power desc, wp.age desc;
+
+
+
 
 
 
@@ -202,6 +221,8 @@ group by RowNumber;
 
 
 
+
+
 # НАХОЖДЕНИЕ ПРОСТЫХ ЧИСЕЛ
 SET @potential_prime = 1;
 SET @divisor = 1;
@@ -220,6 +241,8 @@ WHERE NOT EXISTS(
     WHERE POTENTIAL_PRIME%DIVISOR = 0 AND DIVISOR< POTENTIAL_PRIME);
 
 
+
+
 select h.hacker_id, h.name, count(c.hacker_id) as counter
 from hackers h
      inner join challenges c on c.hacker_id = h.hacker_id
@@ -236,4 +259,19 @@ or counter = (select max(tb3.co4)
              )                 
                    
 order by count(c.hacker_id) desc, h.hacker_id asc
+
+
+
+
+# Создаем таблицу max_score в которой выбраны только макс значения для challenge_id. Таблица состоит из hacker_id и score*
+# Объединяем таблицы hackers и max_score, группируя по hacker_id и суммируя столбец score. 
+select h.hacker_id, h.name, sum(score) as total_score
+from hackers as h 
+    inner join (select hacker_id,  max(score) as score 
+                from submissions 
+                group by challenge_id, hacker_id) as max_score
+    on h.hacker_id=max_score.hacker_id
+group by h.hacker_id, h.name
+having total_score > 0
+order by total_score desc, h.hacker_id asc;
 
