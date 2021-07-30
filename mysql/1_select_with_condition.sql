@@ -287,3 +287,57 @@ from students s
     inner join packages p2 on f.friend_id = p2.id
 where p2.salary > p1.salary
 order by p2.salary;
+
+
+
+
+# Работа с датами. Объединяем задачи у которых совпадают конечная и начальная даты.
+SELECT Start_Date, min(End_Date)
+FROM 
+/* Choose start dates that are not end dates of other projects (if a start date is an end date, it is part of the samee project) */
+    (SELECT Start_Date 
+     FROM Projects 
+     WHERE Start_Date NOT IN (SELECT End_Date FROM Projects)) a,
+/* Choose end dates that are not end dates of other projects */
+    (SELECT end_date 
+     FROM PROJECTS 
+     WHERE end_date NOT IN (SELECT start_date FROM PROJECTS)) b
+/* At this point, we should have a list of start dates and end dates that don't necessarily correspond with each other */
+/* This makes sure we only choose end dates that fall after the start date, and choosing the MIN means for the particular start_date, we get the closest end date that does not coincide with the start of another task */
+where start_date < end_date
+GROUP BY start_date
+ORDER BY datediff(start_date, min(end_date)) DESC, start_date
+
+
+
+
+# Выбираем из таблицы строки с x1=y2 и x2=y1, без повторений.
+# Объединение таблиц по двум условиям.
+SELECT A.x, A.y
+FROM FUNCTIONS A 
+    inner JOIN FUNCTIONS B ON A.x = B.y AND A.y = B.x
+GROUP BY A.x, A.y
+    HAVING COUNT(A.x) > 1 OR A.x < A.y
+ORDER BY A.x;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
