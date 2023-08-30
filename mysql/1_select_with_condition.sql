@@ -1,0 +1,343 @@
+SELECT *
+FROM CITY
+WHERE
+    COUNTRYCODE = 'USA'
+    AND POPULATION > 100000;
+
+
+select distinct city from station where city regexp "^[aeiou].*"; # начинается с гласной
+
+select distinct city from station where city regexp ".*[aeiou]$"; # заканчивается гласной
+
+select distinct city from station where city regexp "^[aeiou].*[aeiou]$";
+
+select distinct city from station where city regexp "^[^aeiou].*"; # не начинается на гласную
+
+select distinct city from station where city regexp ".*[^aeiou]$";
+
+select distinct city from station where city regexp "^[^aeiou].*|.*[^aeiou]$"; # не начинаются на гласную или не заканчиваются
+
+
+select name from students where marks > 75 order by right(name,3), id; # сортировка по последним трем символам строки name.
+
+select name from employee where salary > 2000 and months < 10 order by employee_id asc; # два условия через и.
+
+# Условия
+SELECT CASE             
+            WHEN A + B > C AND B + C > A AND A + C > B THEN
+                CASE 
+                    WHEN A = B AND B = C THEN 'Equilateral'
+                    WHEN A = B OR B = C OR A = C THEN 'Isosceles'
+                    ELSE 'Scalene'
+                END
+            ELSE 'Not A Triangle'
+        END
+FROM TRIANGLES;
+
+# После END стоит название столбца, в который записываются значения из условия 
+SELECT
+  ID,Name,Salary,
+
+  CASE
+    WHEN Salary>=3000 THEN 'ЗП >= 3000'
+    WHEN Salary>=2000 THEN '2000 <= ЗП < 3000'
+    ELSE 'ЗП < 2000'
+  END SalaryTypeWithELSE,
+
+  CASE
+    WHEN Salary>=3000 THEN 'ЗП >= 3000'
+    WHEN Salary>=2000 THEN '2000 <= ЗП < 3000'
+  END SalaryTypeWithoutELSE
+
+FROM Employees
+
+SELECT
+  ID,Name,Salary,DepartmentID,
+
+  CASE
+    WHEN DepartmentID=2 THEN '10%' -- 10% от ЗП выдать Бухгалтерам
+    WHEN DepartmentID=3 THEN '15%' -- 15% от ЗП выдать ИТ-шникам
+    ELSE '5%' -- всем остальным по 5%
+  END NewYearBonusPercent,
+
+  -- построим выражение с использованием CASE, чтобы увидеть сумму бонуса
+  Salary/100*
+  CASE
+    WHEN DepartmentID=2 THEN 10 -- 10% от ЗП выдать Бухгалтерам
+    WHEN DepartmentID=3 THEN 15 -- 15% от ЗП выдать ИТ-шникам
+    ELSE 5 -- всем остальным по 5%
+  END BonusAmount
+
+FROM Employees
+
+SELECT
+  COUNT(*) [Общее кол-во сотрудников],
+  COUNT(DISTINCT DepartmentID) [Число уникальных отделов],
+  COUNT(DISTINCT PositionID) [Число уникальных должностей],
+  COUNT(BonusPercent) [Кол-во сотрудников у которых указан % бонуса],
+  MAX(BonusPercent) [Максимальный процент бонуса],
+  MIN(BonusPercent) [Минимальный процент бонуса],
+  SUM(Salary/100*BonusPercent) [Сумма всех бонусов],
+  AVG(Salary/100*BonusPercent) [Средний размер бонуса],
+  AVG(Salary) [Средний размер ЗП]
+FROM Employees
+
+
+# CONCAT - объединение выражений, SUBSTR - извлекает подстроку, LOWER - перевод в нижний регистр
+select concat(name, '(', substr(occupation,1,1), ')')
+from occupations
+order by name asc;
+select concat('There are a total of ', count(occupation), ' ' , lower(occupation), 's.')
+from occupations
+group by occupation
+order by count(occupation) asc, occupation asc;
+
+
+# сумма по столбцу
+select sum(population) from city where district = 'California';
+
+# среднее значение
+select avg(population) from city where district = 'California';
+
+# округление числа
+select round(avg(population)) from city;
+
+# max min
+select max(population)-min(population) from city;
+
+# Округление и замена символов
+SELECT CEIL(AVG(Salary)-AVG(REPLACE(Salary,'0',''))) FROM EMPLOYEES;
+
+
+# нахождение медианы
+select round(s.lat_n, 4) 
+from station as s 
+where ( (select count(lat_n) from station where s.lat_n >= lat_n) - 
+        (select count(lat_n)%2 from station) = 
+        (select count(lat_n) from station where s.lat_n < lat_n) )
+
+select city.name from city,country where city.countrycode = country.code and country.continent = "Africa";
+
+
+# Группировка по континетнтам. Собираем все города для каждого из континентов.
+select country.continent, floor(avg(city.population))
+from city, country
+where city.countrycode = country.code
+group by country.continent;
+
+
+
+
+
+
+# Сложное условие для двух таблиц
+select
+    case 
+        when grades.grade >= 8 then students.name
+        else NULL
+    end, grades.grade, students.marks
+from students, grades
+where students.marks >= grades.min_mark and students.marks <= grades.max_mark
+order by grades.grade desc, students.name;
+
+
+
+
+
+# Объединение таблиц по некоторому столбцу. Группировка с условием.
+select h.hacker_id, h.name
+from submissions s
+    inner join challenges c on s.challenge_id = c.challenge_id
+    inner join difficulty d on c.difficulty_level = d.difficulty_level 
+    inner join hackers h on s.hacker_id = h.hacker_id
+where s.score = d.score and c.difficulty_level = d.difficulty_level
+group by h.hacker_id, h.name having count(s.hacker_id) > 1
+order by count(s.hacker_id) desc, s.hacker_id asc
+
+
+
+
+
+
+
+SELECT CASE             
+            WHEN P is NULL THEN CONCAT(N, ' Root')
+            WHEN N in (select P from BST) THEN CONCAT(N, ' Inner')
+            ELSE CONCAT(N, ' Leaf')
+       END
+FROM BST
+ORDER BY N;
+
+
+
+
+
+
+select c.company_code, c.founder, count(distinct em.lead_manager_code),
+       count(distinct em.senior_manager_code), count(distinct em.manager_code), count(distinct employee_code)
+from company as c
+    inner join lead_manager as l on c.company_code = l.company_code
+    inner join senior_manager as s on c.company_code = s.company_code
+    inner join manager as m on c.company_code = m.company_code
+    inner join employee as em on c.company_code = em.company_code    
+group by c.company_code, c.founder
+order by em.company_code;
+
+
+
+
+
+select w.id, wp.age, w.coins_needed, w.power
+from wands as w
+    inner join wands_property as wp on w.code = wp.code
+where wp.is_evil = 0 and w.coins_needed = 
+    (select min(coins_needed) from wands as w2
+     inner join wands_property as wp2 on w2.code = wp2.code
+     where w2.power = w.power and wp2.age = wp.age)
+order by w.power desc, wp.age desc;
+
+
+
+
+
+
+# Задание переменных (set @variable=), создание новых столбцов функцией AS
+set @r1=0, @r2=0, @r3=0, @r4=0;
+select min(Doctor), min(Professor), min(Singer), min(Actor)
+from(
+  select case when Occupation='Doctor' then (@r1:=@r1+1)
+              when Occupation='Professor' then (@r2:=@r2+1)
+              when Occupation='Singer' then (@r3:=@r3+1)
+              when Occupation='Actor' then (@r4:=@r4+1) 
+         end as RowNumber,
+    case when Occupation='Doctor' then Name end as Doctor,
+    case when Occupation='Professor' then Name end as Professor,
+    case when Occupation='Singer' then Name end as Singer,
+    case when Occupation='Actor' then Name end as Actor
+  from OCCUPATIONS
+  order by Name
+    ) temp
+group by RowNumber;
+
+
+
+
+
+# НАХОЖДЕНИЕ ПРОСТЫХ ЧИСЕЛ
+SET @potential_prime = 1;
+SET @divisor = 1;
+
+SELECT GROUP_CONCAT(POTENTIAL_PRIME SEPARATOR '&') FROM
+    (SELECT @potential_prime := @potential_prime + 1 AS POTENTIAL_PRIME FROM
+    information_schema.tables t1,                                                      # задание таблицы чисел от 1 до 1000
+    information_schema.tables t2
+    LIMIT 1000) list_of_potential_primes
+WHERE NOT EXISTS(
+    SELECT * FROM
+        (SELECT @divisor := @divisor + 1 AS DIVISOR FROM
+        information_schema.tables t4,
+        information_schema.tables t5
+        LIMIT 1000) list_of_divisors
+    WHERE POTENTIAL_PRIME%DIVISOR = 0 AND DIVISOR< POTENTIAL_PRIME);
+
+
+
+
+select h.hacker_id, h.name, count(c.hacker_id) as counter
+from hackers h
+     inner join challenges c on c.hacker_id = h.hacker_id
+group by h.hacker_id, h.name
+having counter in (select tb2.co3 
+                   from (select count(hacker_id) as co3
+                         from challenges
+                         group by hacker_id) as tb2
+                   group by tb2.co3 having count(tb2.co3) = 1 )
+or counter = (select max(tb3.co4) 
+                   from (select count(hacker_id) as co4
+                         from challenges
+                         group by hacker_id) as tb3 
+             )                 
+                   
+order by count(c.hacker_id) desc, h.hacker_id asc
+
+
+
+
+# Создаем таблицу max_score в которой выбраны только макс значения для challenge_id. Таблица состоит из hacker_id и score*
+# Объединяем таблицы hackers и max_score, группируя по hacker_id и суммируя столбец score. 
+select h.hacker_id, h.name, sum(score) as total_score
+from hackers as h 
+    inner join (select hacker_id,  max(score) as score 
+                from submissions 
+                group by challenge_id, hacker_id) as max_score
+    on h.hacker_id=max_score.hacker_id
+group by h.hacker_id, h.name
+having total_score > 0
+order by total_score desc, h.hacker_id asc;
+
+
+
+
+
+# Создание таблицы при объединении столбцов по таблице students, а также friens+packages
+select s.name
+from students s
+    inner join friends f on s.id = f.id
+    inner join packages p1 on s.id = p1.id
+    inner join packages p2 on f.friend_id = p2.id
+where p2.salary > p1.salary
+order by p2.salary;
+
+
+
+
+# Работа с датами. Объединяем задачи у которых совпадают конечная и начальная даты.
+SELECT Start_Date, min(End_Date)
+FROM 
+/* Choose start dates that are not end dates of other projects (if a start date is an end date, it is part of the samee project) */
+    (SELECT Start_Date 
+     FROM Projects 
+     WHERE Start_Date NOT IN (SELECT End_Date FROM Projects)) a,
+/* Choose end dates that are not end dates of other projects */
+    (SELECT end_date 
+     FROM PROJECTS 
+     WHERE end_date NOT IN (SELECT start_date FROM PROJECTS)) b
+/* At this point, we should have a list of start dates and end dates that don't necessarily correspond with each other */
+/* This makes sure we only choose end dates that fall after the start date, and choosing the MIN means for the particular start_date, we get the closest end date that does not coincide with the start of another task */
+where start_date < end_date
+GROUP BY start_date
+ORDER BY datediff(start_date, min(end_date)) DESC, start_date
+
+
+
+
+# Выбираем из таблицы строки с x1=y2 и x2=y1, без повторений.
+# Объединение таблиц по двум условиям.
+SELECT A.x, A.y
+FROM FUNCTIONS A 
+    inner JOIN FUNCTIONS B ON A.x = B.y AND A.y = B.x
+GROUP BY A.x, A.y
+    HAVING COUNT(A.x) > 1 OR A.x < A.y
+ORDER BY A.x;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
