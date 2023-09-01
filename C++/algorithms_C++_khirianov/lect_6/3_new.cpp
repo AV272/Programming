@@ -1,3 +1,4 @@
+// Создание одномерного динамического массива
 #include <iostream>
 
 struct node_t {
