@@ -1,15 +1,18 @@
+// Не решено
+
 #include <iostream>
+#include <stdlib.h>
 using namespace std;
 
 int main()
 {
-    int n, k;
+    int n, k, left, right, min, max, new_box, k2, k3;
+    bool flag = true;
 
     cin >> n >> k;
 
     int *A = new int[n];
     int *B = new int[k];
-    
 
     for (int i = 0; i < n; i++)
     {
@@ -23,38 +26,60 @@ int main()
     }
 
     B[0] = A[0];
-    B[k-1] = A[n-1];
-    k = k-2;
+    B[1] = A[n-1];
+    k2 = k-2;
+    k3 = 2;
+    min = A[n-1] - A[0];
+    max = 0;
+    new_box = 0;
 
-    for (int i = 0; i < k; i++)
+    for (int i = 0; i < k2; i++)
     {
-        float mid = (A[n-1] - A[0])/2;
-        int j = 1;
-        while (A[j] - A[0] < mid)
+        for (int j = 1; j < n-1; j++)
         {
-            
-            j++;
+            min = A[n-1] - A[0];
+            for (int l = 0; l < k3; l++)
+            {
+                if (abs(A[j] - B[l]) < min)
+                {
+                    min = abs(A[j] - B[l]);
+                }
+            }
+            if (min > max)
+            {
+                max = min;
+                new_box = j;
+            }
         }
-        if (A[j] - mid < mid - A[j-1] )
+        B[i+2] = A[new_box];
+        k3++;
+    }
+    
+    while (flag)
+    {
+        flag = false;
+        for (int i = 0; i < k-1; i++)
         {
-
+            if (B[i]>B[i+1])
+            {
+                int tmp = B[i]; 
+                B[i] = B[i+1];
+                B[i+1] = tmp;
+                flag = true;
+            }
         }
     }
     
-
-
-
-
-
-
-    for (int i = 0; i < n; i++)
+    int x = A[n-1] - A[0];
+    for (int i = 1; i < k; i++)
     {
-        cout << A[i] << '\t';
+        if (B[i]-B[i-1]< x)
+        {
+            x = B[i]-B[i-1];
+        }
     }
     
-    
-    
-    
+    cout << x;
     
     delete[] A;
     delete[] B;
