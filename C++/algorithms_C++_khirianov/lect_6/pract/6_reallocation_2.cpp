@@ -5,12 +5,6 @@ using std::endl;
 
 void my_slightly_less_dumb_reallocation(int** source, unsigned int n_old, unsigned int n_new)
 {
-    if (n_new == 0)
-    {
-        delete[] *source;
-    }
-    
-    
     if (*source == NULL)
     {
         cout << "*source = NULL" << endl;
@@ -29,6 +23,7 @@ void my_slightly_less_dumb_reallocation(int** source, unsigned int n_old, unsign
         }
         for (int i = 0; i < k; i++)
         {
+            cout << **(source+i) << endl;
             copy[i] = **(source+i);
         }
 
