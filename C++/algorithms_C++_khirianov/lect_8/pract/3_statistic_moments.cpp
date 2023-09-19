@@ -5,7 +5,7 @@ using namespace std;
 
 int main()
 {
-    double x = 1.0, sum = 0.0, n =0.0, sum2 = 0.0;
+    float_t x = 1.0, sum = 0.0, n =0.0, sum2 = 0.0;
     while (x!= 0)
     {
         cin >> x;
@@ -14,7 +14,7 @@ int main()
         n++;
     }
     n = n-1.0;
-    double m, D, m2;
+    float_t m, D, m2;
     m = sum/n;
     m2 = sum2/n;
     D = m2 - m*m;
@@ -22,7 +22,9 @@ int main()
     m = round(1000.0*m)/1000.0;
     D = round(1000.0*D)/1000.0;
 
-    cout << m << ' ' << D;
+    //cout << m << ' ' << D << '\n';
+    printf("%.1f ", m);
+    printf("%.1f\n", D);
     
     return 0;
 }
